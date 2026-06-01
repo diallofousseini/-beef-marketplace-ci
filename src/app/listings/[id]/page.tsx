@@ -140,7 +140,7 @@ export default function ListingDetail() {
                     />
                   </div>
                   {/* Thumbnails */}
-                  {listing.images.slice(1, 4).map((img, index) => (
+                  {listing.images.slice(1, 4).map((img: string, index: number) => (
                     <div key={index} className="aspect-w-1 aspect-h-1">
                       <Image
                         src={img}
@@ -219,7 +219,7 @@ export default function ListingDetail() {
                   <div>
                     <h3 className="font-semibold text-gray-900">{listing.seller?.name || "Nom non disponible"}</h3>
                     <p className="mt-1 text-sm text-gray-500">
-                      {listing.seller?.city || "Ville non disponible"}
+                      {listing.seller?.address || "Ville non disponible"}
                     </p>
                     <div className="mt-2 flex items-center space-x-3">
                       <button

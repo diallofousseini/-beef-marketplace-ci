@@ -24,7 +24,7 @@ export async function GET(
             name: true,
             image: true,
             phone: true,
-            city: true,
+            address: true,
             latitude: true,
             longitude: true,
           },

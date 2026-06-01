@@ -192,7 +192,7 @@ export default function ListingsPage() {
                       <div className="mt-4 flex items-center justify-between text-xs text-gray-400">
                         <div className="flex items-center">
                           <MapPin className="h-4 w-4 mr-1" />
-                          <span>{listing.seller?.city || "Ville inconnue"}</span>
+                          <span>{listing.seller?.address || "Ville inconnue"}</span>
                         </div>
                         <div className="flex items-center">
                           <Truck className="h-4 w-4 mr-1" />

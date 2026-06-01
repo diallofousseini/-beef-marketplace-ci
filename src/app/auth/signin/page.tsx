@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { SignIn } from "lucide-react";
 import { useState } from "react";
 
 export default function SignInPage() {

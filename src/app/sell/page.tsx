@@ -12,7 +12,7 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [weightKg, setWeightKg] = useState("");
   const [city, setCity] = useState("");
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);

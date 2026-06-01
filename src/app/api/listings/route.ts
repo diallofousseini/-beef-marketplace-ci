@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
         weightKg: parseFloat(weightKg),
         city,
         images,
-        sellerId: session.user.id,
+        sellerId: (session.user as any).id,
       },
     });
 

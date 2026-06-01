@@ -1,9 +1,7 @@
+"use client";
+
 import Link from "next/link";
 import { useState } from "react";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -21,37 +19,32 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      // Check if user already exists
-      const existingUser = await prisma.user.findUnique({
-        where: { email },
-      });
-
-      if (existingUser) {
-        setError("Un compte avec cet email existe déjà.");
-        setIsLoading(false);
-        return;
-      }
-
-      // Hash password
-      const hashedPassword = await bcrypt.hash(password, 10);
-
-      // Create user
-      await prisma.user.create({
-        data: {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           name,
           email,
-          hashedPassword,
+          password,
           role,
-        },
+        }),
       });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Erreur lors de la création du compte.");
+      }
 
       setSuccess("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
       setName("");
       setEmail("");
       setPassword("");
       setRole("BUYER");
-    } catch (err) {
-      setError("Erreur lors de la création du compte. Veuillez réessayer.");
+    } catch (err: any) {
+      setError(err.message || "Erreur lors de la création du compte. Veuillez réessayer.");
       console.error(err);
     } finally {
       setIsLoading(false);

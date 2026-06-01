@@ -1,8 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Truck, Heart } from "lucide-react";
 import { useState, useEffect } from "react";
-import prisma from "@/lib/prisma";
 
 export default function ListingsPage() {
   const [listings, setListings] = useState<Array<any>>([]);
@@ -22,40 +23,16 @@ export default function ListingsPage() {
     setLoading(true);
     setError(null);
     try {
-      const where: any = {};
-      if (filters.city) {
-        where.city = {
-          contains: filters.city,
-          mode: "insensitive",
-        };
-      }
-      if (filters.minPrice || filters.maxPrice) {
-        where.price = {};
-        if (filters.minPrice) {
-          where.price.gte = parseFloat(filters.minPrice);
-        }
-        if (filters.maxPrice) {
-          where.price.lte = parseFloat(filters.maxPrice);
-        }
-      }
+      const params = new URLSearchParams();
+      if (filters.city) params.append("city", filters.city);
+      if (filters.minPrice) params.append("minPrice", filters.minPrice);
+      if (filters.maxPrice) params.append("maxPrice", filters.maxPrice);
 
-      const data = await prisma.beefListing.findMany({
-        where,
-        include: {
-          seller: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              city: true,
-            },
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-      });
-
+      const res = await fetch(`/api/listings?${params.toString()}`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch listings");
+      }
+      const data = await res.json();
       setListings(data);
     } catch (err) {
       setError("Erreur lors du chargement des annonces");
@@ -114,7 +91,7 @@ export default function ListingsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="mb-4 text-2xl font-bold text-gray-900">
             Annonces de bœuf
-          </h2>
+          </h1>
           <div className="grid gap-4 sm:grid-cols-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">

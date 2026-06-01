@@ -1,9 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Truck, Heart, MessageCircle, Phone } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import prisma from "@/lib/prisma";
 
 export default function ListingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -18,34 +19,19 @@ export default function ListingDetail() {
   }, [id]);
 
   const fetchListing = async () => {
+    if (!id) return;
     setLoading(true);
     setError(null);
     try {
-      const data = await prisma.beefListing.findUnique({
-        where: { id },
-        include: {
-          seller: {
-            select: {
-              id: true,
-              name: true,
-              image: true,
-              phone: true,
-              city: true,
-              latitude: true,
-              longitude: true,
-            },
-          },
-        },
-      });
-
-      if (!data) {
-        setError("Annonce non trouvée");
-        return;
+      const res = await fetch(`/api/listings/${id}`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Erreur lors du chargement de l'annonce");
       }
-
+      const data = await res.json();
       setListing(data);
-    } catch (err) {
-      setError("Erreur lors du chargement de l'annonce");
+    } catch (err: any) {
+      setError(err.message || "Erreur lors du chargement de l'annonce");
       console.error(err);
     } finally {
       setLoading(false);

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+
 import { Upload, MapPin, Trash2, Edit3, Image as ImageIcon, Camera } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -114,7 +117,7 @@ export default function SellPage() {
                     height={40}
                   />
                 </div>
-              }
+              </div>
             </div>
           </div>
         </div>

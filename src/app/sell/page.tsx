@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 import { Upload, MapPin, Trash2, Edit3, Image as ImageIcon, Camera } from "lucide-react";
 import { useState, useEffect } from "react";

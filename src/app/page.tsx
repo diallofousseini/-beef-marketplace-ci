@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowCircleUp, MapPin, Truck, Heart } from "lucide-react";
+import { ArrowUpCircle, MapPin, Truck, Heart } from "lucide-react";
 
 export default function Home() {
   // In a real app, fetch from database
@@ -158,7 +158,7 @@ export default function Home() {
             <div className="flex flex-col items-center text-center">
               <div className="flex-shrink-0">
                 <div className="h-12 w-12 rounded-md bg-red-50 flex items-center justify-center">
-                  <ArrowCircleUp className="h-6 w-6 text-red-600" />
+                  <ArrowUpCircle className="h-6 w-6 text-red-600" />
                 </div>
               </div>
               <h3 className="mt-4 font-semibold text-gray-900">

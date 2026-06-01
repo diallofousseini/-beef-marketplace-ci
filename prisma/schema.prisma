@@ -21,6 +21,7 @@ model User {
   ratings       Rating[] @relation("sellerRatings")
   listings      BeefListing[] @relation("sellerListings")
   orders        Order[]    @relation("buyerOrders")
+  buyerRatings  Rating[]   @relation("buyerRatings")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -43,6 +44,7 @@ model BeefListing {
   sellerId    String
   seller      User     @relation("sellerListings", fields: [sellerId], references: [id])
   isAvailable Boolean  @default(true)
+  orderItems  OrderItem[] @relation("listingItems")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

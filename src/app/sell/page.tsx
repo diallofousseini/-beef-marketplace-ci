@@ -262,7 +262,7 @@ export default function SellPage() {
                         className="absolute top-0 right-0 flex h-6 w-6 items-center justify-center bg-red-500 text-red-100 rounded-full text-xs"
                         aria-label="Remove image"
                       >
-                        <trash2 className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   ))}

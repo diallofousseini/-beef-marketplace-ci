@@ -1,0 +1,112 @@
+// Prisma schema for Beef Marketplace
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  name          String?
+  image         String?  // Cloudinary URL
+  role          Role     @default(BUYER)
+  phone         String?  // For WhatsApp contact
+  address       String?  // City or full address for map
+  latitude      Float?   // For map
+  longitude     Float?   // For map
+  hashedPassword String?
+  ratings       Rating[] @relation("sellerRatings")
+  listings      BeefListing[] @relation("sellerListings")
+  orders        Order[]    @relation("buyerOrders")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([email])
+}
+
+enum Role {
+  SELLER
+  BUYER
+}
+
+model BeefListing {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  price       Float    // Price per kg or total? We'll assume per kg
+  weightKg    Float    // Weight in kg
+  city        String
+  images      String[] // Cloudinary URLs (array)
+  sellerId    String
+  seller      User     @relation("sellerListings", fields: [sellerId], references: [id])
+  isAvailable Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([city])
+  @@index([sellerId])
+}
+
+model Order {
+  id          String   @id @default(cuid())
+  buyerId     String
+  buyer       User     @relation("buyerOrders", fields: [buyerId], references: [id])
+  status      OrderStatus @default(PENDING)
+  totalAmount Float
+  paymentMethod PaymentMethod // enum
+  paymentStatus PaymentStatus // enum
+  telephone   String?   // For mobile money reference
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       OrderItem[] @relation("orderItems")
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  ORANGE_MONEY
+  MTN_MONEY
+  WAVE
+  CASH_ON_DELIVERY
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  order     Order    @relation("orderItems", fields: [orderId], references: [id])
+  listingId String
+  listing   BeefListing @relation("listingItems", fields: [listingId], references: [id])
+  quantity  Float    // kg purchased
+  unitPrice Float    // price per kg at time of purchase
+  totalPrice Float   // quantity * unitPrice
+}
+
+model Rating {
+  id        String   @id @default(cuid())
+  sellerId  String
+  seller    User     @relation("sellerRatings", fields: [sellerId], references: [id])
+  buyerId   String?  // Could be null if anonymous
+  buyer     User?    @relation("buyerRatings", fields: [buyerId], references: [id])
+  rating    Int      // 1-5
+  comment   String?
+  createdAt DateTime @default(now())
+
+  @@index([sellerId])
+}
